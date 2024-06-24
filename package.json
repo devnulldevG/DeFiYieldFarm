@@ -1,0 +1,19 @@
+{
+  "name": "defiyieldfarm",
+  "version": "1.0.0",
+  "description": "A decentralized application for yield farming in the DeFi space.",
+  "main": "index.ts",
+  "scripts": {
+    "start": "ts-node index.ts",
+    "test": "jest"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.3"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3",
+    "ts-jest": "^26.4.4"
+  }
+}
