@@ -1,1 +1,1 @@
-# DeFiYieldFarm
+DeFiYieldFarm is a backend application aimed at exploring and managing decentralized finance (DeFi) yield farming opportunities. Built using Express.js, this project establishes a foundational server setup and includes basic routing to monitor server status and integrates yield farming functionalities. The application runs on port 3000, providing a simple yet effective infrastructure for DeFi enthusiasts to interact with yield farming mechanisms.
