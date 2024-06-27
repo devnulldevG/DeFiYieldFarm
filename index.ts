@@ -1,18 +1,18 @@
 import express from 'express';
-import { yieldFarmRouter } from './yieldFarmRouter';
+import { farmingRouter as yieldFarmingRouter } from './yieldFarmRouter';
 
-const app = express();
+const server = express();
 
-app.use(express.json());
+server.use(express.json());
 
-app.get('/health-check', (req, res) => {
-  res.json({ status: 'Server is operational!' });
+server.get('/health', (req, res) => {
+  res.json({ message: 'Server is up and running!' });
 });
 
-app.use('/yield-farming', yieldFarmRouter);
+server.use('/api/yield-farming', yieldFarmingRouter);
 
-const port = process.env.PORT || 3000;
+const applicationPort = process.env.PORT || 3000;
 
-app.listen(port, () => {
-  console.log(`Yield Farming Server listening on port ${port}...`);
+server.listen(applicationLinePort, () => {
+  console.log(`Yield Farming App Server is active on port ${applicationPort}`);
 });
