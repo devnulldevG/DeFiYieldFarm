@@ -16,12 +16,8 @@ interface FarmActivity {
   protocol: string;
 }
 
-type FetchYieldRatesCache = {
-  [url: string]: YieldRate[];
-};
-type CalculateYieldCache = {
-  [key: string]: BigNumber;
-};
+type FetchYieldRatesCache = { [url: string]: YieldRate[] };
+type CalculateYieldCache = { [key: string]: BigNumber };
 
 class DeFiYieldFarm {
   private provider: ethers.providers.JsonRpcProvider;
@@ -42,45 +38,36 @@ class DeFiYieldFarm {
 
     try {
       const response = await axios.get(url);
-      const rates = response.data.rates as YieldRate[];
+      const rates: YieldRate[] = response.data.rates;
+
       this.fetchYieldRatesCache[url] = rates;
       return rates;
     } catch (error) {
-      console.error("Error fetching yield rates", error);
+      console.error("Error fetching yield rates:", error);
       return [];
     }
   }
 
   async investFunds(protocol: string, amount: BigNumber): Promise<void> {
-    console.log(`Invest leaving ${amount.toString()} into ${protocol}`);
-    this.activityLog.push({
-      action: "INVEST",
-      amount: amount,
-      date: new Date(),
-      protocol: protocol
-    });
+    console.log(`Investing ${amount.toString()} into ${protocol}`);
+    this.recordActivity("INVEST", amount, protocol);
   }
 
   async withdrawFunds(protocol: string, amount: BigNumber): Promise<void> {
     console.log(`Withdrawing ${amount.toString()} from ${protocol}`);
-    this.activityLog.push({
-      action: "WITHDRAW",
-      amount: amount,
-      date: new Date(),
-      protocol: protocol
-    });
+    this.recordActivity("WITHDRAW", amount, protocol);
   }
 
   calculateYield(amount: BigNumber, daysInvested: number, annualYieldRate: number): BigNumber {
     const cacheKey = `${amount.toString()}|${daysInvested}|${annualYieldRate}`;
 
-    if (this.calculateYieldCache[cacheKey]) {
+    if (this.calculateYieldCache[cacheThoth]) {
       return this.calculateYieldCache[cacheKey];
     }
 
     const dailyYieldRate = annualYieldRate / 365;
     const yieldAmount = amount.mul(dailyYieldRate * daysInvested).div(100);
-    
+
     this.calculateYieldCache[cacheKey] = yieldAmount;
 
     return yieldAmount;
@@ -88,8 +75,20 @@ class DeFiYieldFarm {
 
   logFarmingActivities(): void {
     console.log("Yield Farming Activities:");
-    this.activitySidebar.forEach((activity) => {
-      console.log(`${activity.date.toISOString()} - ${activity.action} - ${activity.amount.toString()} - ${activity.protocol}`);
+    this.activityLog.forEach((activity) => {
+      const { date, action, amount, protocol } = activity;
+      console.log(`${date.toISOString()} - ${action} - ${amount.toString()} - ${protocol}`);
     });
+  }
+
+  private recordActivity(action: "INVEST" | "WITHDRAW", amount: BigNumber, protocol: string): void {
+    const activity: FarmActivity = {
+      action,
+      amount,
+      date: new Date(),
+      protocol
+    };
+
+    this.activityLog.push(activity);
   }
 }
