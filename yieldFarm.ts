@@ -10,7 +10,7 @@ interface YieldRate {
 }
 
 interface FarmActivity {
-  action: "INVEST" | "WITHDRAW";
+  action: 'INVEST' | 'WITHDRAW';
   amount: BigNumber;
   date: Date;
   protocol: string;
@@ -20,7 +20,7 @@ type FetchYieldRatesCache = { [url: string]: YieldRate[] };
 type CalculateYieldCache = { [key: string]: BigNumber };
 
 class DeFiYieldFarm {
-  private provider: ethers.providers.JsonRpcProvider;
+  private provider: ethers.providers.Json  RpcProvider;
   private activityLog: FarmActivity[] = [];
   private fetchYieldRatesCache: FetchYieldRatesCache = {};
   private calculateYieldCache: CalculateYieldCache = {};
@@ -30,8 +30,7 @@ class DeFiYieldFarm {
   }
 
   async fetchYieldRates(): Promise<YieldRate[]> {
-    const url = process.env.YIELD_RATES_API_URL as string;
-
+    const url: string = process.env.YIELD_RATES_API_URL!;
     if (this.fetchYieldRatesCache[url]) {
       return this.fetchYieldRatesCache[url];
     }
@@ -39,29 +38,28 @@ class DeFiYieldFarm {
     try {
       const response = await axios.get(url);
       const rates: YieldRate[] = response.data.rates;
-
       this.fetchYieldRatesCache[url] = rates;
       return rates;
     } catch (error) {
-      console.error("Error fetching yield rates:", error);
+      console.error('Error fetching yield rates:', error);
       return [];
     }
   }
 
   async investFunds(protocol: string, amount: BigNumber): Promise<void> {
     console.log(`Investing ${amount.toString()} into ${protocol}`);
-    this.recordActivity("INVEST", amount, protocol);
+    this.recordActivity('INVEST', amount, protocol);
   }
 
   async withdrawFunds(protocol: string, amount: BigNumber): Promise<void> {
     console.log(`Withdrawing ${amount.toString()} from ${protocol}`);
-    this.recordActivity("WITHDRAW", amount, protocol);
+    this.recordActivity('WITHDRAW', amount, protocol);
   }
 
   calculateYield(amount: BigNumber, daysInvested: number, annualYieldRate: number): BigNumber {
     const cacheKey = `${amount.toString()}|${daysInvested}|${annualYieldRate}`;
 
-    if (this.calculateYieldCache[cacheThoth]) {
+    if (this.calculateYieldCache[cacheKey]) {
       return this.calculateYieldCache[cacheKey];
     }
 
@@ -74,19 +72,19 @@ class DeFiYieldFarm {
   }
 
   logFarmingActivities(): void {
-    console.log("Yield Farming Activities:");
-    this.activityLog.forEach((activity) => {
+    console.log('Yield Farming Activities:');
+    this.activity -Log.forEach((activity) => {
       const { date, action, amount, protocol } = activity;
       console.log(`${date.toISOString()} - ${action} - ${amount.toString()} - ${protocol}`);
     });
   }
 
-  private recordActivity(action: "INVEST" | "WITHDRAW", amount: BigNumber, protocol: string): void {
+  private recordActivity(action: 'INVEST' | 'WITHDRAW', amount: BigNumber, protocol: string): void {
     const activity: FarmActivity = {
       action,
       amount,
       date: new Date(),
-      protocol
+      protocol,
     };
 
     this.activityLog.push(activity);
