@@ -3,35 +3,35 @@ import { config } from 'dotenv';
 
 config();
 
-interface ApiResponse {
-  success: boolean;
-  data?: any;
+interface APIResponse {
+  isSuccess: boolean;
+  payload?: any;
 }
 
-const fetchDataFromAPI = async (url: string): Promise<ApiResponse> => {
+const fetchFromAPI = async (endpointURL: string): Promise<APIResponse> => {
   try {
-    const response = await axios.get(url);
-    return { success: true, data: response.data };
+    const response = await axios.get(endpointURL);
+    return { isSuccess: true, payload: response.data };
   } catch (error) {
-    console.error(`Error fetching data from ${url}`, error);
-    return { success: false };
+    console.error(`Error fetching data from ${endpointURL}`, error);
+    return { isSuccess: false };
   }
 };
 
-export const getYieldFarmingData = async (): Promise<ApiResponse> => {
-  const apiUrl = process.env.DEFI_PROTOCOL_YIELD_FARMING_API_URL;
-  if (!apiUrl) {
-    console.error('DEFI_PROTOCOL_YIELD_FARMING_API_URL is not defined in the env file.');
-    return { success: false };
+export const fetchYieldFarmingInfo = async (): Promise<APIResponse> => {
+  const yieldFarmingAPI = process.env.DEFI_YIELD_FARMING_API_URL;
+  if (!yieldFarmingAPI) {
+    console.error('DEFI_YIELD_FARMING_API_URL is not defined in the env file.');
+    return { isSuccess: false };
   }
-  return fetchDataFromAPI(apiUrl);
+  return fetchFromAPI(yieldFarmingAPI);
 };
 
-export const getStakingData = async (): Promise<ApiResponse> => {
-  const apiUrl = process.env.DEFI_PROTOCOL_STAKING_API_URL;
-  if (!apiUrl) {
-    console.error('DEFI_PROTOCOL_STAKING_API_URL is not defined in the env file.');
-    return { success: false };
+export const fetchStakingInfo = async (): Promise<APIResponse> => {
+  const stakingAPI = process.env.DEFI_STAKING_API_URL;
+  if (!stakingAPI) {
+    console.error('DEFI_STAKING_API_URL is not defined in the env file.');
+    return { isSuccess: false };
   }
-  return fetchDataFromAPI(apiUrl);
+  return fetchFromAPI(stakingAPI);
 };
