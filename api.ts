@@ -3,35 +3,35 @@ import { config } from 'dotenv';
 
 config();
 
-interface APIResponse {
+interface ApiResponse {
   isSuccess: boolean;
-  payload?: any;
+  data?: any;  // Renamed from payload to data for more direct understanding of what it contains
 }
 
-const fetchFromAPI = async (endpointURL: string): Promise<APIResponse> => {
+const fetchDataFromApi = async (apiUrl: string): Promise<ApiResponse> => {
   try {
-    const response = await axios.get(endpointURL);
-    return { isSuccess: true, payload: response.data };
+    const response = await axios.get(apiUrl);
+    return { isSuccess: true, data: response.data };
   } catch (error) {
-    console.error(`Error fetching data from ${endpointURL}`, error);
+    console.error(`Error fetching data from ${apiUrl}`, error);
     return { isSuccess: false };
   }
 };
 
-export const fetchYieldFarmingInfo = async (): Promise<APIResponse> => {
-  const yieldFarmingAPI = process.env.DEFI_YIELD_FARMING_API_URL;
-  if (!yieldFarmingAPI) {
-    console.error('DEFI_YIELD_FARMING_API_URL is not defined in the env file.');
+export const retrieveYieldFarmingData = async (): Promise<ApiResponse> => {
+  const yieldFarmingApiUrl = process.env.DEFI_YIELD_FARMING_API_URL;
+  if (!yieldFarmingApiUrl) {
+    console.error('DEFI_YIELD_FARMING_API_URL is not defined in the environment variables.');
     return { isSuccess: false };
   }
-  return fetchFromAPI(yieldFarmingAPI);
+  return fetchDataFromApi(yieldFarmingApiUrl);
 };
 
-export const fetchStakingInfo = async (): Promise<APIResponse> => {
-  const stakingAPI = process.env.DEFI_STAKING_API_URL;
-  if (!stakingAPI) {
-    console.error('DEFI_STAKING_API_URL is not defined in the env file.');
+export const retrieveStakingData = async (): Promise<ApiResponse> => {
+  const stakingApiUrl = process.env.DEFI_STAKING_API_URL;
+  if (!stakingApiUrl) {
+    console.error('DEFI_STAKING_API_URL is not defined in the environment variables.');
     return { isSuccess: false };
   }
-  return fetchFromAPI(stakingAPI);
+  return fetchDataFromApi(stakingApiUrl);
 };
