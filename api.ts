@@ -3,35 +3,35 @@ import { config } from 'dotenv';
 
 config();
 
-interface ApiResponse {
+interface ApiFetchResult {
   isSuccess: boolean;
-  data?: any;  // Renamed from payload to data for more direct understanding of what it contains
+  data?: any;
 }
 
-const fetchDataFromApi = async (apiUrl: string): Promise<ApiResponse> => {
+const fetchApiData = async (endpointUrl: string): Promise<ApiFetchResult> => {
   try {
-    const response = await axios.get(apiUrl);
+    const response = await axios.get(endpointUrl);
     return { isSuccess: true, data: response.data };
   } catch (error) {
-    console.error(`Error fetching data from ${apiUrl}`, error);
+    console.error(`Error fetching data from ${endpointUrl}`, error);
     return { isSuccess: false };
   }
 };
 
-export const retrieveYieldFarmingData = async (): Promise<ApiResponse> => {
-  const yieldFarmingApiUrl = process.env.DEFI_YIELD_FARMING_API_URL;
-  if (!yieldFarmingApiUrl) {
-    console.error('DEFI_YIELD_FARMING_API_URL is not defined in the environment variables.');
+export const fetchYieldFarmingInfo = async (): Promise<ApiFetchResult> => {
+  const yieldFarmingEndpoint = process.env.YIELD_FARMING_API_ENDPOINT;
+  if (!yieldFarmingEndpoint) {
+    console.error('YIELD_FARMING_API_ENDPOINT environment variable is not set.');
     return { isSuccess: false };
   }
-  return fetchDataFromApi(yieldFarmingApiUrl);
+  return fetchApiData(yieldFarmingEndpoint);
 };
 
-export const retrieveStakingData = async (): Promise<ApiResponse> => {
-  const stakingApiUrl = process.env.DEFI_STAKING_API_URL;
-  if (!stakingApiUrl) {
-    console.error('DEFI_STAKING_API_URL is not defined in the environment variables.');
+export const fetchStakingInfo = async (): Promise<ApiFetchResult> => {
+  const stakingApiEndpoint = process.env.STAKING_API_ENDPOINT;
+  if (!stakingApiEndpoint) {
+    console.error('STAKING_API_ENDPOINT environment variable is not set.');
     return { isSuccess: false };
   }
-  return fetchDataFromApi(stakingApiUrl);
+  return fetchApiData(stakingApiEndpoint);
 };
