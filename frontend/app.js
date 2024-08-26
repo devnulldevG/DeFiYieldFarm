@@ -1,40 +1,40 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+const BASE_API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
 
-const fetchData = async (endpoint) => {
+const fetchAPIData = async (endpoint) => {
     try {
-        const { data } = await axios.get(`${API_URL}/${endpoint}`);
+        const { data } = await axios.get(`${BASE_API_URL}/${endpoint}`);
         return data;
     } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching data from API:', error);
         return null;
     }
 };
 
-const updateUI = (data) => {
-    const dataElement = document.getElementById('data-container');
-    if (data) {
-        dataElement.textContent = JSON.stringify(data, null, 2);
+const displayDataInUI = (fetchedData) => {
+    const dataContainerElement = document.getElementById('data-container');
+    if (fetchedData) {
+        dataContainerElement.textContent = JSON.stringify(fetchedData, null, 2);
     } else {
-        dataElement.textContent = 'Failed to load data';
+        dataContainerElement.textContent = 'Failed to load data from API';
     }
 };
 
-const handleGetDataClick = async () => {
-    const data = await fetchData('data');
-    updateUI(data);
+const handleFetchDataButtonClick = async () => {
+    const apiData = await fetchAPIData('data');
+    displayDataInUI(apiData);
 };
 
-const init = () => {
-    const getDataButton = document.getElementById('get-data-btn');
-    if(getDataButton) {
-        getDataButton.addEventListener('click', handleGetDataClick);
+const initializeApplication = () => {
+    const fetchDataButton = document.getElementById('get-data-btn');
+    if(fetchDataButton) {
+        fetchDataButton.addEventListener('click', handleFetchDataButtonClick);
     }
 };
 
 if(document.readyState === 'loading') {  
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', initializeApplication);
 } else {  
-    init();
+    initializeApplication();
 }
