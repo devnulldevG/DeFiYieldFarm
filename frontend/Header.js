@@ -1,19 +1,51 @@
+import { useState, useEffect } from 'react';
+
+export const useFetchDataWithErrorHandling = (url) => {
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch: ${response.statusText}`);
+        }
+        const data = await response.json();
+        setData(data);
+      } catch (error) {
+        setError(error.toString());
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  return { data, error, isLoading };
+};
+```
+
+```javascript
 import React from 'react';
-import { Link } from 'react-router-dom';
-const appName = process.env.REACT_APP_APP_NAME;
-const Header = () => {
+import { useFetchDataWithErrorHandling } from './hooks/useFetchDataWithErrorHandling';
+
+const FarmDataComponent = ({ apiUrl }) => {
+  const { data, error, isLoading } = useFetchDataWithErrorHandling(apiUrl);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error encountered: {error}</div>;
+
   return (
-    <header>
-      <nav>
-        <ul>
-          <li><Link to="/">{appName}</Link></li>
-          <li><Link to="/dashboard">Dashboard</Link></li>
-          <li><Link to="/farms">Farms</Link></li>
-          <li><Link to="/pools">Pools</Link></li>
-          <li><Link to="/about">About</Link></li>
-        </ul>
-      </nav>
-    </header>
+    <div>
+      {data && data.map(farm => (
+        <div key={farm.id}>{farm.name}</div>
+      ))}
+    </div>
   );
 };
-export default Header;
+
+export default FarmDataComponent;
