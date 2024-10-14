@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 
+const fetchCache = {};
+
 export const useFetchDataWithErrorHandling = (url) => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
@@ -7,14 +9,20 @@ export const useFetchDataWithErrorHandling = (url) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (fetchCache[url]) {
+        setData(fetchCache[url]);
+        return;
+      }
+
       setIsLoading(true);
       try {
         const response = await fetch(url);
         if (!response.ok) {
           throw new Error(`Failed to fetch: ${response.statusText}`);
         }
-        const data = await response.json();
-        setData(data);
+        const jsonData = await response.json();
+        fetchCache[url] = jsonData;
+        setData(jsonData);
       } catch (error) {
         setError(error.toString());
       } finally {
