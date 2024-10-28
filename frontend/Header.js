@@ -21,7 +21,7 @@ export const useFetchDataWithErrorHandling = (url) => {
           throw new Error(`Failed to fetch: ${response.statusText}`);
         }
         const jsonData = await response.json();
-        fetchCache[url] = jsonData;
+        fetchCache[url] = jsonData; // Cache the fetched data
         setData(jsonData);
       } catch (error) {
         setError(error.toString());
@@ -47,11 +47,13 @@ const FarmDataComponent = ({ apiUrl }) => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error encountered: {error}</div>;
 
+  const renderFarms = (farms) => {
+    return farms.map(farm => <div key={farm.id}>{farm.name}</div>);
+  };
+
   return (
     <div>
-      {data && data.map(farm => (
-        <div key={farm.id}>{farm.name}</div>
-      ))}
+      {data && renderFarms(data)}
     </div>
   );
 };
