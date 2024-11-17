@@ -1,68 +1,77 @@
 import React, { useState } from 'react';
 
 const FarmForm = () => {
-  const [investmentAmount, setInvestmentAmount] = useState('');
-  const [protocol, setProtocol] = useState('');
-  const [otherParams, setOtherParams] = useState('');
+    const [investmentAmount, setInvestmentAmount] = useState('');
+    const [protocol, setProtocol] = useState('');
+    const [otherParams, setOtherParams] = useState('');
 
-  const validateForm = () => {
-    if (!investmentAmount || isNaN(investmentAmount) || investmentAmount <= 0) {
-      alert('Please enter a valid investment amount');
-      return false;
-    }
+    const validateForm = () => {
+        if (!investmentAmount) {
+            alert('The investment amount cannot be empty. Please enter a valid number.');
+            return false;
+        }
 
-    if (!protocol) {
-      alert('Please select a protocol');
-      return false;
-    }
+        if (isNaN(investmentAmount)) {
+            alert('The investment amount must be a number. Please correct your input.');
+            return false;
+        }
 
-    return true;
-  };
+        if (investmentAmount <= 0) {
+            alert("The investment amount must be greater than zero. Please enter a valid amount.");
+            return false;
+        }
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+        if (!protocol) {
+            alert('Please select a protocol from the dropdown menu.');
+            return false;
+        }
 
-    if (validateForm()) {
-      const formData = {
-        investmentAmount,
-        protocol,
-        otherParams,
-      };
+        return true;
+    };
 
-      console.log('Submitting form data:', formData);
+    const handleSubmit = (event) => {
+        event.preventDefault();
 
-    }
-  };
+        if (validateForm()) {
+            const formData = {
+                investmentAmount,
+                protocol,
+                otherParams,
+            };
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Investment Amount:</label>
-        <input
-          type="text"
-          value={investmentAmount}
-          onChange={(e) => setInvestmentAmount(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>Protocol:</label>
-        <select value={protocol} onChange={(e) => setProtocol(e.target.value)}>
-          <option value="">Select a Protocol</option>
-          <option value="protocol1">Protocol 1</option>
-          <option value="protocol2">Protocol 2</option>
-        </select>
-      </div>
-      <div>
-        <label>Other Parameters:</label>
-        <input
-          type="text"
-          value={otherParams}
-          onChange={(e) => setOtherParams(e.target.value)}
-        />
-      </div>
-      <button type="submit">Submit</button>
-    </form>
-  );
+            console.log('Submitting form data:', formData);
+        }
+    };
+
+    return (
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label>Investment Amount:</label>
+            <input
+              type="text"
+              value={investmentAmount}
+              onChange={(e) => setInvestmentAmount(e.target.value)}
+            />
+          </div>
+          <div>
+            <label>Protocol:</label>
+            <select value={protocol} onChange={(e) => setProtocol(e.target.value)}>
+              <option value="">Select a Protocol</option>
+              <option value="protocol1">Protocol 1</option>
+              <option value="protocol2">Protocol 2</option>
+            </select>
+          </div>
+          <div>
+            <label>Other Parameters:</label>
+            <input
+              type="text"
+              value={otherParams}
+              onChange={(e) => setOtherParams(e.target.value)}
+            />
+          </div>
+          <button type="submit">Submit</button>
+        </form>
+    );
 };
 
 export default FarmForm;
