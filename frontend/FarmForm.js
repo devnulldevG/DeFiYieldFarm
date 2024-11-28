@@ -5,28 +5,45 @@ const FarmForm = () => {
     const [protocol, setProtocol] = useState('');
     const [otherParams, setOtherParams] = useState('');
 
-    const validateForm = () => {
+    const isEmptyInvestmentAmount = () => {
         if (!investmentAmount) {
             alert('The investment amount cannot be empty. Please enter a valid number.');
-            return false;
+            return true;
         }
+        return false;
+    };
 
+    const isInvestmentAmountNotANumber = () => {
         if (isNaN(investmentAmount)) {
             alert('The investment amount must be a number. Please correct your input.');
-            return false;
+            return true;
         }
+        return false;
+    };
 
+    const isInvestmentAmountZeroOrLess = () => {
         if (investmentAmount <= 0) {
             alert("The investment amount must be greater than zero. Please enter a valid amount.");
-            return false;
+            return true;
         }
+        return false;
+    };
 
+    const isProtocolNotSelected = () => {
         if (!protocol) {
             alert('Please select a protocol from the dropdown menu.');
-            return false;
+            return true;
         }
+        return false;
+    };
 
-        return true;
+    const validateForm = () => {
+        return !(
+            isEmptyInvestmentAmount() ||
+            isInvestmentAmountNotANumber() ||
+            isInvestmentAmountZeroOrLess() ||
+            isProtocolNotSelected()
+        );
     };
 
     const handleSubmit = (event) => {
